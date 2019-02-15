@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Shower> showers;
     private RecyclerView recyclerView;
-    private TextView textView;
+    private TextView recordT, totalT, averageT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +40,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         showers = new ArrayList<>();
         recyclerView = findViewById(R.id.recycleView);
-        textView = findViewById(R.id.record);
+        recordT = findViewById(R.id.record);
+        totalT = findViewById(R.id.totalShowers);
+        averageT = findViewById(R.id.average);
         getShowers();
         setRecord();
+        setTotalShowers();
+        setAverage();
         setRecyclerView(showers);
     }
 
@@ -53,6 +57,30 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void setTotalShowers(){
+
+        totalT.setText(String.valueOf(showers.size()));
+    }
+
+    public void setAverage(){
+
+        long sum = 0;
+
+        for(int i=0; i<showers.size();i++){
+
+            sum+=showers.get(i).getLength();
+        }
+
+        long average = sum/showers.size();
+
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(average);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(average)
+                - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(average));
+
+        String recordStr = String.format("%02d:%02d", minutes, seconds);
+
+        averageT.setText(recordStr);
+    }
 
     public void setRecord(){
 
@@ -73,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         String recordStr = String.format("%02d:%02d", minutes, seconds);
 
-        textView.setText(recordStr);
+        recordT.setText(recordStr);
     }
 
     private void setRecyclerView(List<Shower> showers){
