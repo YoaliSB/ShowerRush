@@ -21,8 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.LinkedList;
-import java.util.List;
 
 public class ShowerActivity extends AppCompatActivity {
 
@@ -73,18 +71,14 @@ public class ShowerActivity extends AppCompatActivity {
             button.setBackgroundColor(getResources().getColor(R.color.green));
             button.setText("REANUDAR");
         }
-        else{
-            startChrono();
+        else {
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            pauseOffset = 0;
         }
-
-    }
-    public void resetChrono(View view){
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        pauseOffset = 0;
     }
 
-    public void finish(View view) throws ParseException, IOException {
-        long length = SystemClock.elapsedRealtime() - chronometer.getBase();
+    public void finishShower(View view) throws ParseException, IOException {
+        long length = SystemClock.elapsedRealtime() - chronometer.getBase() - pauseOffset;
         Date date = GregorianCalendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm");
         String strDate = dateFormat.format(date);
@@ -92,11 +86,18 @@ public class ShowerActivity extends AppCompatActivity {
         Shower shower = new Shower();
         shower.setLength(length);
         shower.setDate(strDate);
-        shower.setId(3);
+        shower.setId(showers.size());
 
         showers.add(shower);
-
-        saveShower();
+        try {
+            saveShower();
+        }
+        catch  (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            finish();
+        }
     }
 
     public void writeShowersArray(JsonWriter writer) throws IOException {
@@ -115,8 +116,8 @@ public class ShowerActivity extends AppCompatActivity {
             OutputStream out = new FileOutputStream(JSONfile);
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
             writeShowersArray(writer);
-            writer.close();
             writer.flush();
+            writer.close();
             out.close();
     }
 
