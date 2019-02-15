@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.android.showerrush.adapters.ShowerRecycleAdapter;
 import com.example.android.showerrush.model.Shower;
@@ -25,11 +26,13 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     private List<Shower> showers;
     private RecyclerView recyclerView;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         showers = new ArrayList<>();
         recyclerView = findViewById(R.id.recycleView);
+        textView = findViewById(R.id.record);
         getShowers();
+        setRecord();
         setRecyclerView(showers);
     }
 
@@ -46,6 +51,29 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ShowerActivity.class);
 
         startActivity(intent);
+    }
+
+
+    public void setRecord(){
+
+        long curr;
+        long min = showers.get(0).getLength();
+
+        for(int i=1; i<showers.size();i++){
+
+            curr = showers.get(i).getLength();
+            if(curr<min){
+                min = curr;
+            }
+        }
+
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(min);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(min)
+                - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(min));
+
+        String recordStr = String.format("%02d:%02d", minutes, seconds);
+
+        textView.setText(recordStr);
     }
 
     private void setRecyclerView(List<Shower> showers){
