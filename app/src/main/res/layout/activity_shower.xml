@@ -22,26 +22,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/start"
-        style="@android:style/Widget.DeviceDefault.Button"
-        android:layout_width="92dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/verde"
-        android:onClick="start"
-        android:text="Iniciar"
-        app:layout_constraintStart_toStartOf="@+id/chronometer"
-        app:layout_constraintTop_toTopOf="@+id/stop" />
-
-    <Button
         android:id="@+id/stop"
         style="@android:style/Widget.DeviceDefault.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="@android:color/holo_orange_dark"
+        android:layout_width="113dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="68dp"
+        android:background="@color/yellow"
         android:onClick="pauseChrono"
         android:text="Pausar"
-        app:layout_constraintEnd_toEndOf="@+id/chronometer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chronometer" />
 
     <Button
@@ -49,21 +40,26 @@
         style="@android:style/Widget.DeviceDefault.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginBottom="112dp"
         android:onClick="resetChrono"
         android:text="Reiniciar"
-        app:layout_constraintStart_toStartOf="@+id/chronometer"
-        app:layout_constraintTop_toBottomOf="@+id/start" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/finish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="8dp"
         android:backgroundTint="@android:color/holo_red_dark"
         android:onClick="finish"
         android:text="Terminar"
-        app:layout_constraintEnd_toEndOf="@+id/chronometer"
-        app:layout_constraintTop_toTopOf="@+id/restart" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/restart"
+        app:layout_constraintVertical_bias="0.0" />
     "
     tools:layout_editor_absoluteX="142dp"
     tools:layout_editor_absoluteY="187dp" />
