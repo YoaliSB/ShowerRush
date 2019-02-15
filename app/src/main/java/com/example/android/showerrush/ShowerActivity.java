@@ -17,18 +17,21 @@ public class ShowerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shower);
-
         chronometer = findViewById(R.id.chronometer);
+        startChrono();
 
     }
 
-    public void startChrono(View view){
-
+    private void startChrono() {
         if(!running){
             chronometer.setBase(SystemClock.elapsedRealtime()-pauseOffset);
             chronometer.start();
             running = true;
         }
+    }
+
+    public void start(View view){
+        startChrono();
 
     }
     public void pauseChrono(View view){
@@ -45,4 +48,9 @@ public class ShowerActivity extends AppCompatActivity {
         chronometer.setBase(SystemClock.elapsedRealtime());
         pauseOffset = 0;
     }
+
+    public void finish(View view){
+
+    }
+
 }

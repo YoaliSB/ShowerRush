@@ -28,10 +28,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Date date = new GregorianCalendar(2019, Calendar.FEBRUARY, 11).getTime();
-    Shower shower1 = new Shower(1, 30, date);
-    Shower shower2 = new Shower(2, 20, date);
-
     private List<Shower> showers;
     private RecyclerView recyclerView;
 
@@ -40,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         showers = new ArrayList<>();
-        recyclerView = (RecyclerView) findViewById(R.id.recycleView);
+        recyclerView = findViewById(R.id.recycleView);
         getShowers();
         setRecyclerView(showers);
     }
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String loadJSONFromAsset() {
-        String json = null;
+        String json;
         try {
             InputStream is = getAssets().open("showers.json");
             int size = is.available();

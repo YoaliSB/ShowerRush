@@ -3,6 +3,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Shower {
 
@@ -30,6 +31,16 @@ public class Shower {
         return length;
     }
 
+    public String getStrLength() {
+        String strLength = "";
+        final long min = TimeUnit.MILLISECONDS.toMinutes(length);
+        final long sec = TimeUnit.MILLISECONDS.toSeconds(length)
+                - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(length));
+        strLength += min + "m";
+        if(sec > 0) strLength += " " + sec + "s";
+        return strLength;
+    }
+
     public void setLength(long length) {
         this.length = length;
     }
@@ -39,13 +50,13 @@ public class Shower {
     }
 
     public String getStrDate() {
-        DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm");
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         String strDate = dateFormat.format(date);
         return strDate;
     }
 
     public void setDate(String strDate) throws ParseException {
-        String pattern = "yyyy-MM-dd hh:mm";
+        String pattern = "dd-MM-yyyy HH:mm";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
         Date date = simpleDateFormat.parse(strDate);

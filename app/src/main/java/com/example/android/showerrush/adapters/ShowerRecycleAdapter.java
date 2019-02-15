@@ -41,7 +41,7 @@ public class ShowerRecycleAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ShowerRecordHolder showerRecordHolder, int i) {
-        showerRecordHolder.length.setText(String.valueOf(showers.get(i).getLength()));
+        showerRecordHolder.length.setText(showers.get(i).getStrLength());
         showerRecordHolder.date.setText(showers.get(i).getStrDate());
     }
 
