@@ -1,11 +1,15 @@
 package com.example.android.showerrush.model;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class Shower {
+public class Shower implements Serializable, Parcelable {
 
     private int id;
     private long length;
@@ -17,6 +21,12 @@ public class Shower {
         this.id = id;
         this.length = length;
         this.date = date;
+    }
+
+    private Shower(Parcel in) throws ParseException {
+        id = in.readInt();
+        length = in.readLong();
+        setDate(in.readString());
     }
 
     public int getId() {
@@ -61,5 +71,37 @@ public class Shower {
 
         Date date = simpleDateFormat.parse(strDate);
         this.date = date;
+    }
+
+    public static final Parcelable.Creator<Shower> CREATOR =
+            new Parcelable.Creator<Shower>() {
+
+                @Override
+                public Shower createFromParcel(Parcel source) {
+                    try {
+                        return new Shower(source);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                @Override
+                public Shower[] newArray(int size) {
+                    return new Shower[size];
+                }
+
+            };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeLong(length);
+        parcel.writeString(getStrDate());
     }
 }

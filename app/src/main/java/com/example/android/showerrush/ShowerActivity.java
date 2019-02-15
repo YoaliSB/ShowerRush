@@ -1,37 +1,24 @@
 package com.example.android.showerrush;
 
-<<<<<<< HEAD
-import android.content.Context;
-=======
-import android.graphics.Color;
->>>>>>> origin/record/lts
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.JsonWriter;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 
 import com.example.android.showerrush.model.Shower;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -40,6 +27,7 @@ import java.util.List;
 public class ShowerActivity extends AppCompatActivity {
 
     public int id;
+    public ArrayList<Shower> showers;
 
     private Chronometer chronometer;
     private boolean running;
@@ -55,6 +43,7 @@ public class ShowerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shower);
         chronometer = findViewById(R.id.chronometer);
         button = findViewById(R.id.stop);
+        showers = getIntent().getParcelableArrayListExtra("showers");
         startChrono();
 
     }
@@ -105,13 +94,12 @@ public class ShowerActivity extends AppCompatActivity {
         shower.setDate(strDate);
         shower.setId(3);
 
-        List<Shower> showers = new LinkedList<>();
         showers.add(shower);
 
-        saveShower(showers);
+        saveShower();
     }
 
-    public void writeShowersArray(JsonWriter writer, List<Shower> showers) throws IOException {
+    public void writeShowersArray(JsonWriter writer) throws IOException {
         writer.beginArray();
         for (Shower shower : showers) {
             writeShower(writer, shower);
@@ -120,25 +108,16 @@ public class ShowerActivity extends AppCompatActivity {
     }
 
 
-    public void saveShower(List<Shower> showers)throws IOException{
+    public void saveShower()throws IOException{
             File JSONfile = new File(getExternalFilesDir(null).getPath(), FILE_NAME);
             JSONfile.getParentFile().mkdirs();
             JSONfile.createNewFile();
             OutputStream out = new FileOutputStream(JSONfile);
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
-            writeShowersArray(writer, showers);
+            writeShowersArray(writer);
             writer.close();
             writer.flush();
             out.close();
-
-//        Path filepath = Paths.get(getExternalFilesDir(null).getPath(), FILE_NAME);
-//        try {
-//            JsonWriter writer = new JsonWriter(new FileWriter(filepath.toFile()));
-//            GSON gson
-//            gson.toJson(shower, Shower.class, writer);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void writeShower(JsonWriter writer, Shower shower) throws IOException {
