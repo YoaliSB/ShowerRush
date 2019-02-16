@@ -2,6 +2,7 @@ package com.example.android.showerrush;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Shower> showers;
     private RecyclerView recyclerView;
-    private TextView recordT, totalT, averageT;
+    private TextView recordT, totalT, averageT,lts;
+    private final static double ltsPerSecondOMS = 0.33;
 
     private final static String FILE_NAME = "showers.json";
 
@@ -48,11 +50,13 @@ public class MainActivity extends AppCompatActivity {
         recordT = findViewById(R.id.record);
         totalT = findViewById(R.id.totalShowers);
         averageT = findViewById(R.id.average);
+        lts = findViewById(R.id.lts);
 
         getShowers();
         setRecord();
         setTotalShowers();
         setAverage();
+        setSavedLts();
         setRecyclerView(showers);
     }
 
@@ -67,6 +71,25 @@ public class MainActivity extends AppCompatActivity {
     public void setTotalShowers(){
 
         totalT.setText(String.valueOf(showers.size()));
+    }
+
+    public void setSavedLts(){
+
+        long sum = 0;
+
+        for(int i=0; i<showers.size();i++){
+
+            sum+=showers.get(i).getLength();
+        }
+
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sum);
+        double consumedLts = seconds * ltsPerSecondOMS;
+        double savedLts = 200 - consumedLts;
+
+        if(savedLts<0){
+            lts.setTextColor(Color.RED);
+        }
+        lts.setText(String.valueOf(savedLts));
     }
 
     public void setAverage(){
