@@ -1,9 +1,11 @@
 package com.example.android.showerrush;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonWriter;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -19,8 +21,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class ShowerActivity extends AppCompatActivity {
 
@@ -30,6 +32,7 @@ public class ShowerActivity extends AppCompatActivity {
     private Chronometer chronometer;
     private boolean running;
     private long pauseOffset;
+    private long timeWhenStopped;
     private Button button;
 
     private final static String FILE_NAME = "showers.json";
@@ -42,17 +45,19 @@ public class ShowerActivity extends AppCompatActivity {
         chronometer = findViewById(R.id.chronometer);
         button = findViewById(R.id.stop);
         showers = getIntent().getParcelableArrayListExtra("showers");
+        timeWhenStopped = 0;
         startChrono();
 
     }
 
     private void startChrono() {
         if(!running){
-            chronometer.setBase(SystemClock.elapsedRealtime()-pauseOffset);
+            chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
             chronometer.start();
             running = true;
 
-            button.setBackgroundColor(getResources().getColor(R.color.yellow));
+            button.setBackgroundColor(Color.LTGRAY);
+            button.setTextColor(Color.BLACK);
             button.setText("PAUSAR");
         }
     }
@@ -61,26 +66,36 @@ public class ShowerActivity extends AppCompatActivity {
         startChrono();
 
     }
-    public void pauseChrono(View view){
 
+    public void resetChrono(View view){
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        pauseOffset = 0;
+        timeWhenStopped = 0;
+        running = false;
+        startChrono();
+    }
+    public void pauseChrono(View view){
         if(running){
             chronometer.stop();
             pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+            timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
             running = false;
 
-            button.setBackgroundColor(getResources().getColor(R.color.green));
+            button.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            button.setTextColor(Color.WHITE);
             button.setText("REANUDAR");
         }
         else {
-            chronometer.setBase(SystemClock.elapsedRealtime());
             pauseOffset = 0;
+            startChrono();
         }
     }
 
     public void finishShower(View view) throws ParseException, IOException {
         long length = SystemClock.elapsedRealtime() - chronometer.getBase() - pauseOffset;
-        Date date = GregorianCalendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm");
+        Date date = Calendar.getInstance().getTime();
+        Log.d(TAG, ("Current time => " + date));
+        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm");
         String strDate = dateFormat.format(date);
 
         Shower shower = new Shower();

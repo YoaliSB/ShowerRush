@@ -60,13 +60,13 @@ public class Shower implements Serializable, Parcelable {
     }
 
     public String getStrDate() {
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
         String strDate = dateFormat.format(date);
         return strDate;
     }
 
     public void setDate(String strDate) throws ParseException {
-        String pattern = "dd-MM-yyyy HH:mm";
+        String pattern = "dd-MMM-yyyy HH:mm";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
         Date date = simpleDateFormat.parse(strDate);

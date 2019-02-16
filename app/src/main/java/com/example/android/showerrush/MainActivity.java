@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Shower> showers;
     private RecyclerView recyclerView;
     private TextView recordT, totalT, averageT,lts;
-    private final static double ltsPerSecondOMS = 0.33;
+    private final static double LTS_PER_SECOND_OMS = 0.33;
 
     private final static String FILE_NAME = "showers.json";
 
@@ -74,49 +74,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setSavedLts(){
-
         long sum = 0;
-
         for(int i=0; i<showers.size();i++){
-
             sum+=showers.get(i).getLength();
         }
 
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sum);
-        double consumedLts = seconds * ltsPerSecondOMS;
-        double savedLts = 200 - consumedLts;
+        double consumedLts = seconds * LTS_PER_SECOND_OMS;
+        int savedLts = 200*showers.size() - (int)consumedLts;
 
         if(savedLts<0){
             lts.setTextColor(Color.RED);
         }
+
         lts.setText(String.valueOf(savedLts));
     }
 
     public void setAverage(){
+        if(showers.size()>0){
+            long sum = 0;
+            for(int i=0; i<showers.size();i++){
+                sum+=showers.get(i).getLength();
+            }
 
-        long sum = 0;
+            long average = sum/showers.size();
 
-        for(int i=0; i<showers.size();i++){
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(average);
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(average)
+                    - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(average));
 
-            sum+=showers.get(i).getLength();
+            String recordStr = String.format("%02d:%02d", minutes, seconds);
+            averageT.setText(recordStr);
         }
-
-        long average = sum/showers.size();
-
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(average);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(average)
-                - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(average));
-
-        String recordStr = String.format("%02d:%02d", minutes, seconds);
-
-        averageT.setText(recordStr);
     }
 
     public void setRecord(){
-        long min = showers.get(0).getLength();
+        long min = 0;
         if(showers.size()>0){
+            min = Long.MAX_VALUE;
+
             long curr;
-            for(int i=1; i<showers.size();i++){
+            for(int i=0; i<showers.size();i++){
                 curr = showers.get(i).getLength();
                 if(curr<min){
                     min = curr;
